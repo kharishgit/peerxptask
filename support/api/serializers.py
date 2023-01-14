@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from support.models import User
+from support.models import User,Department
 
 
 # class LoginSerializer(serializers.Serializer):
@@ -41,3 +41,18 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'name','password', 'email_or_phone', 'mobile_number', 'department', 'role')
+        #START
+    #     extra_kwargs = {'password': {'write_only': True}}
+
+    # def create(self, validated_data):
+    #     user = User.objects.create(**validated_data)
+    #     user.set_password(validated_data['password'])
+    #     user.save()
+    #     return user
+
+        #END
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = '__all__'

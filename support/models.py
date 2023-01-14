@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 from django.db import models
@@ -6,16 +7,19 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.utils.translation import gettext_lazy as _
 
 class Department(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField
+    name = models.CharField(max_length=30)
+    description = models.TextField()
+    created_by = models.ForeignKey('support.User', on_delete=models.CASCADE, related_name='departments')
     created_at = models.DateTimeField(auto_now_add=True)
-    # created_by = models.ForeignKey(User,on_delete=models.CASCADE)
+    last_updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
 class UserManager(BaseUserManager):
-    def create_user(self, email_or_phone, password=None, **extra_fields):
+    def create_user(self, email_or_phone, password=None):
         if not email_or_phone:
             raise ValueError('Users must have an email or phone number')
-        user = self.model(email_or_phone=email_or_phone, **extra_fields)
+        user = self.model(email_or_phone=email_or_phone)
         user.set_password(password)
         user.save(using=self._db)
         return user
